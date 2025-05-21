@@ -20,7 +20,7 @@ const items = [
   },
   {
     title: "Denied Claims",
-    url: "denials",
+    url: "denial",
     icon: Ban,
   },
 ];
