@@ -60,7 +60,7 @@ function ClaimsTable({
             <TableHead>ID</TableHead>
             <TableHead>Claimant</TableHead>
             <TableHead>Amount</TableHead>
-            <TableHead>Denial Reason</TableHead> {/* Changed from Date */}
+            <TableHead>Denial Reason</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
