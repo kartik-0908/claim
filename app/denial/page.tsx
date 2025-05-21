@@ -17,37 +17,8 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { motion, AnimatePresence } from "framer-motion";
-
-// Example denied claims data
-const deniedClaims = [
-  {
-    id: "D-001",
-    claimant: "John Doe",
-    amount: "$1,200",
-    date: "2025-05-10",
-    status: "Denied",
-    denialReason: "Insufficient documentation provided.",
-    description: "Outpatient consultation for fever.",
-    provider: "Dr. Smith",
-    providerNPI: "1234567890",
-    serviceType: "Outpatient",
-    serviceDate: "2025-05-09",
-    documentationList: [
-      {
-        name: "Discharge Summary.pdf",
-        type: "PDF Document",
-        url: "#",
-      },
-      {
-        name: "LabReport_2025-05-01.pdf",
-        type: "PDF Document",
-        url: "#",
-      },
-    ],
-  },
-  // ...more denied claims
-];
+import { motion } from "framer-motion";
+import { deniedClaims } from "./data";
 
 export default function DeniedClaimsPage() {
   const [selectedClaim, setSelectedClaim] = useState<any>(null);
@@ -89,7 +60,7 @@ function ClaimsTable({
             <TableHead>ID</TableHead>
             <TableHead>Claimant</TableHead>
             <TableHead>Amount</TableHead>
-            <TableHead>Date</TableHead>
+            <TableHead>Denial Reason</TableHead> {/* Changed from Date */}
             <TableHead>Status</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
@@ -103,7 +74,9 @@ function ClaimsTable({
               <TableCell>{claim.id}</TableCell>
               <TableCell className="font-medium">{claim.claimant}</TableCell>
               <TableCell>{claim.amount}</TableCell>
-              <TableCell>{claim.date}</TableCell>
+              <TableCell className="max-w-[180px] truncate">
+                {claim.denialReason}
+              </TableCell>
               <TableCell>
                 <span className="px-2 py-1 rounded text-xs font-semibold bg-red-100 text-red-800">
                   {claim.status}
@@ -205,7 +178,9 @@ function ReAppealDialog({
                     <div className="font-semibold text-xs text-red-700 mb-1">
                       Denial Reason
                     </div>
-                    <div className="text-sm text-red-800">{claim.denialReason}</div>
+                    <div className="text-sm text-red-800">
+                      {claim.denialReason}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -217,7 +192,7 @@ function ReAppealDialog({
               </div>
               <div className="flex flex-col gap-3">
                 {Array.isArray(claim.documentationList) &&
-                  claim.documentationList.length > 0 ? (
+                claim.documentationList.length > 0 ? (
                   claim.documentationList.map((doc: any) => (
                     <div
                       key={doc.name}
@@ -239,7 +214,9 @@ function ReAppealDialog({
                     </div>
                   ))
                 ) : (
-                  <div className="text-gray-500 text-sm">No documents found.</div>
+                  <div className="text-gray-500 text-sm">
+                    No documents found.
+                  </div>
                 )}
               </div>
             </div>
