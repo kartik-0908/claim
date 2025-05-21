@@ -19,76 +19,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { motion, AnimatePresence } from "framer-motion";
-
-const pendingClaims = [
-  {
-    id: 1,
-    claimant: "John Doe",
-    amount: "$500",
-    date: "2025-05-01",
-    status: "Pending",
-    description: "Medical claim for surgery.",
-  },
-  {
-    id: 2,
-    claimant: "Jane Smith",
-    amount: "$750",
-    date: "2025-05-03",
-    status: "Pending",
-    description: "Dental claim for root canal.",
-  },
-  {
-    id: 5,
-    claimant: "Charlie Lee",
-    amount: "$200",
-    date: "2025-05-05",
-    status: "Pending",
-    description: "Prescription reimbursement.",
-  },
-  {
-    id: 6,
-    claimant: "Priya Patel",
-    amount: "$1,100",
-    date: "2025-05-06",
-    status: "Pending",
-    description: "Hospitalization claim.",
-  },
-];
-
-const submittedClaims = [
-  {
-    id: 3,
-    claimant: "Alice Johnson",
-    amount: "$300",
-    date: "2025-04-28",
-    status: "Submitted",
-    description: "Vision claim for glasses.",
-  },
-  {
-    id: 4,
-    claimant: "Bob Brown",
-    amount: "$1200",
-    date: "2025-04-30",
-    status: "Submitted",
-    description: "Surgery reimbursement.",
-  },
-  {
-    id: 7,
-    claimant: "Sara Kim",
-    amount: "$450",
-    date: "2025-04-27",
-    status: "Submitted",
-    description: "Physical therapy claim.",
-  },
-  {
-    id: 8,
-    claimant: "David Wu",
-    amount: "$900",
-    date: "2025-04-25",
-    status: "Submitted",
-    description: "Emergency room visit.",
-  },
-];
+import { pendingClaims, submittedClaims } from "./data";
 
 export default function ClaimsPage() {
   const [selectedClaim, setSelectedClaim] = useState<any>(null);
@@ -253,12 +184,12 @@ function ReviewDialog({
           <DialogTitle className="text-2xl">Claim Details</DialogTitle>
         </DialogHeader>
         {claim && (
-          <div className="space-y-6">
+          <div className="space-y-6 text-xs">
             {/* First row: Provider Info & Claim Details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Provider Info Card */}
               <div className="border rounded-lg p-4 bg-gray-50">
-                <div className="font-bold text-lg mb-4 text-gray-700">
+                <div className="font-bold text-sm mb-3 text-gray-700">
                   Provider Info
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -266,7 +197,7 @@ function ReviewDialog({
                     <div className="font-semibold text-xs text-gray-500 mb-1">
                       Provider
                     </div>
-                    <div className="text-base">
+                    <div className="text-sm">
                       {claim.provider || "Dr. Smith"}
                     </div>
                   </div>
@@ -274,7 +205,7 @@ function ReviewDialog({
                     <div className="font-semibold text-xs text-gray-500 mb-1">
                       Provider NPI
                     </div>
-                    <div className="text-base">
+                    <div className="text-sm">
                       {claim.providerNPI || "1234567890"}
                     </div>
                   </div>
@@ -282,16 +213,15 @@ function ReviewDialog({
                     <div className="font-semibold text-xs text-gray-500 mb-1">
                       Service Type
                     </div>
-                    <div className="text-base">
+                    <div className="text-sm">
                       {claim.serviceType || "Outpatient"}
                     </div>
                   </div>
-
                   <div>
                     <div className="font-semibold text-xs text-gray-500 mb-1">
                       Service Date
                     </div>
-                    <div className="text-base">
+                    <div className="text-sm">
                       {claim.serviceDate || claim.date}
                     </div>
                   </div>
@@ -299,16 +229,15 @@ function ReviewDialog({
                     <div className="font-semibold text-xs text-gray-500 mb-1">
                       Service Information
                     </div>
-                    <div className="text-base">
+                    <div className="text-sm">
                       {claim.serviceInfo || "General Health Service"}
                     </div>
                   </div>
                 </div>
               </div>
-
               {/* Claim Details Card */}
               <div className="border rounded-lg p-4 bg-gray-50">
-                <div className="font-bold text-lg mb-2 text-gray-700">
+                <div className="font-bold text-sm mb-2 text-gray-700">
                   Claim Details
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -316,25 +245,25 @@ function ReviewDialog({
                     <div className="font-semibold text-xs text-gray-500 mb-1">
                       Claimant
                     </div>
-                    <div className="text-base">{claim.claimant}</div>
+                    <div className="text-sm">{claim.claimant}</div>
                   </div>
                   <div>
                     <div className="font-semibold text-xs text-gray-500 mb-1">
                       Amount
                     </div>
-                    <div className="text-base">{claim.amount}</div>
+                    <div className="text-sm">{claim.amount}</div>
                   </div>
                   <div>
                     <div className="font-semibold text-xs text-gray-500 mb-1">
                       Status
                     </div>
-                    <div className="text-base">{claim.status}</div>
+                    <div className="text-sm">{claim.status}</div>
                   </div>
                   <div className="col-span-2">
                     <div className="font-semibold text-xs text-gray-500 mb-1">
                       Description
                     </div>
-                    <div className="text-base">{claim.description}</div>
+                    <div className="text-sm">{claim.description}</div>
                   </div>
                 </div>
               </div>
