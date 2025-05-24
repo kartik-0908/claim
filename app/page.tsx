@@ -39,6 +39,13 @@ interface Documentation {
   url: string;
 }
 
+interface ThinkingStep {
+  id: number;
+  title: string;
+  duration: number;
+  status: 'pending' | 'processing' | 'completed';
+}
+
 interface ProcessingStep {
   id: number;
   title: string;
@@ -48,6 +55,7 @@ interface ProcessingStep {
   duration: number;
   status: 'pending' | 'processing' | 'completed';
   details?: string;
+  thinkingSteps: ThinkingStep[];
 }
 
 // Example pending claims data
@@ -82,7 +90,14 @@ const processingSteps: ProcessingStep[] = [
     logoUrl: "/logo/epic.png",
     duration: 2500,
     status: 'pending',
-    details: "Accessing patient ID: JS-001247"
+    details: "Accessing patient ID: JS-001247",
+    thinkingSteps: [
+      { id: 1, title: "Establishing secure connection to Epic servers", duration: 500, status: 'pending' },
+      { id: 2, title: "Authenticating with healthcare credentials", duration: 400, status: 'pending' },
+      { id: 3, title: "Locating patient record in Epic database", duration: 600, status: 'pending' },
+      { id: 4, title: "Retrieving complete medical history", duration: 700, status: 'pending' },
+      { id: 5, title: "Downloading recent visit summaries", duration: 300, status: 'pending' }
+    ]
   },
   {
     id: 2,
@@ -92,7 +107,14 @@ const processingSteps: ProcessingStep[] = [
     logoUrl: "/logo/united.png",
     duration: 2000,
     status: 'pending',
-    details: "Policy: UHC-789456123"
+    details: "Policy: UHC-789456123",
+    thinkingSteps: [
+      { id: 1, title: "Connecting to UnitedHealthcare portal", duration: 400, status: 'pending' },
+      { id: 2, title: "Verifying member ID and policy status", duration: 500, status: 'pending' },
+      { id: 3, title: "Checking active coverage periods", duration: 450, status: 'pending' },
+      { id: 4, title: "Retrieving benefit details and limits", duration: 400, status: 'pending' },
+      { id: 5, title: "Validating copay and deductible info", duration: 250, status: 'pending' }
+    ]
   },
   {
     id: 3,
@@ -102,7 +124,14 @@ const processingSteps: ProcessingStep[] = [
     logoUrl: "/logo/aetna.png",
     duration: 2800,
     status: 'pending',
-    details: "Validating procedure coverage"
+    details: "Validating procedure coverage",
+    thinkingSteps: [
+      { id: 1, title: "Accessing Aetna authorization systems", duration: 600, status: 'pending' },
+      { id: 2, title: "Cross-referencing procedure requirements", duration: 700, status: 'pending' },
+      { id: 3, title: "Checking pre-authorization needs", duration: 500, status: 'pending' },
+      { id: 4, title: "Validating coverage limits and exclusions", duration: 600, status: 'pending' },
+      { id: 5, title: "Confirming in-network provider status", duration: 400, status: 'pending' }
+    ]
   },
   {
     id: 4,
@@ -112,7 +141,14 @@ const processingSteps: ProcessingStep[] = [
     logoUrl: "/logo/makailogo.png",
     duration: 3200,
     status: 'pending',
-    details: "Cross-referencing procedure database"
+    details: "Cross-referencing procedure database",
+    thinkingSteps: [
+      { id: 1, title: "Analyzing medical procedures performed", duration: 800, status: 'pending' },
+      { id: 2, title: "Cross-referencing diagnosis information", duration: 600, status: 'pending' },
+      { id: 3, title: "Generating appropriate CPT codes", duration: 700, status: 'pending' },
+      { id: 4, title: "Assigning accurate ICD-10 codes", duration: 650, status: 'pending' },
+      { id: 5, title: "Validating code accuracy and compliance", duration: 450, status: 'pending' }
+    ]
   },
   {
     id: 5,
@@ -122,7 +158,14 @@ const processingSteps: ProcessingStep[] = [
     logoUrl: "/logo/way.png",
     duration: 1500,
     status: 'pending',
-    details: "Ready for submission"
+    details: "Ready for submission",
+    thinkingSteps: [
+      { id: 1, title: "Connecting to Waystar platform", duration: 300, status: 'pending' },
+      { id: 2, title: "Validating claim format and structure", duration: 400, status: 'pending' },
+      { id: 3, title: "Checking submission rules and requirements", duration: 350, status: 'pending' },
+      { id: 4, title: "Preparing final claim documents", duration: 300, status: 'pending' },
+      { id: 5, title: "Claim ready for insurance submission", duration: 150, status: 'pending' }
+    ]
   }
 ];
 
@@ -140,6 +183,7 @@ export default function Home() {
   const [generatedClaim, setGeneratedClaim] = useState<Claim | null>(null);
   const [currentProcessingSteps, setCurrentProcessingSteps] = useState<ProcessingStep[]>(processingSteps);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [currentThinkingStepIndex, setCurrentThinkingStepIndex] = useState(0);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setHistoryFiles(e.target.files);
@@ -149,9 +193,14 @@ export default function Home() {
     if (!historyFiles || historyFiles.length === 0) return;
     setIsProcessing(true);
     setCurrentStepIndex(0);
+    setCurrentThinkingStepIndex(0);
     
     // Reset all steps to pending
-    setCurrentProcessingSteps(processingSteps.map(step => ({ ...step, status: 'pending' })));
+    setCurrentProcessingSteps(processingSteps.map(step => ({ 
+      ...step, 
+      status: 'pending',
+      thinkingSteps: step.thinkingSteps.map(ts => ({ ...ts, status: 'pending' }))
+    })));
     
     // Start processing steps sequentially
     processNextStep(0);
@@ -175,19 +224,66 @@ export default function Home() {
     );
     
     setCurrentStepIndex(stepIndex);
+    setCurrentThinkingStepIndex(0);
 
-    // Simulate processing time for current step
-    setTimeout(() => {
-      // Mark current step as completed and move to next
+    // Process thinking steps for current main step
+    processThinkingSteps(stepIndex, 0);
+  };
+
+  const processThinkingSteps = (stepIndex: number, thinkingStepIndex: number) => {
+    const currentStep = processingSteps[stepIndex];
+    
+    if (thinkingStepIndex >= currentStep.thinkingSteps.length) {
+      // All thinking steps completed for this main step
       setCurrentProcessingSteps(prev => 
         prev.map((step, index) => ({
           ...step,
-          status: index <= stepIndex ? 'completed' : 'pending'
+          status: index <= stepIndex ? 'completed' : 'pending',
+          thinkingSteps: index === stepIndex 
+            ? step.thinkingSteps.map(ts => ({ ...ts, status: 'completed' }))
+            : step.thinkingSteps
         }))
       );
       
-      processNextStep(stepIndex + 1);
-    }, processingSteps[stepIndex].duration);
+      // Move to next main step
+      setTimeout(() => {
+        processNextStep(stepIndex + 1);
+      }, 200);
+      return;
+    }
+
+    // Mark current thinking step as processing
+    setCurrentProcessingSteps(prev => 
+      prev.map((step, index) => ({
+        ...step,
+        thinkingSteps: index === stepIndex 
+          ? step.thinkingSteps.map((ts, tsIndex) => ({
+              ...ts,
+              status: tsIndex === thinkingStepIndex ? 'processing' : (tsIndex < thinkingStepIndex ? 'completed' : 'pending')
+            }))
+          : step.thinkingSteps
+      }))
+    );
+    
+    setCurrentThinkingStepIndex(thinkingStepIndex);
+
+    // Simulate processing time for current thinking step
+    setTimeout(() => {
+      // Mark current thinking step as completed and move to next
+      setCurrentProcessingSteps(prev => 
+        prev.map((step, index) => ({
+          ...step,
+          thinkingSteps: index === stepIndex 
+            ? step.thinkingSteps.map((ts, tsIndex) => ({
+                ...ts,
+                status: tsIndex <= thinkingStepIndex ? 'completed' : 'pending'
+              }))
+            : step.thinkingSteps
+        }))
+      );
+      
+      processThinkingSteps(stepIndex, thinkingStepIndex + 1);
+    }, currentStep.thinkingSteps[thinkingStepIndex].duration);
   };
 
   const handleDialogClose = () => {
@@ -196,8 +292,13 @@ export default function Home() {
     setHistoryFiles(null);
     setIsProcessing(false);
     setGeneratedClaim(null);
-    setCurrentProcessingSteps(processingSteps.map(step => ({ ...step, status: 'pending' })));
+    setCurrentProcessingSteps(processingSteps.map(step => ({ 
+      ...step, 
+      status: 'pending',
+      thinkingSteps: step.thinkingSteps.map(ts => ({ ...ts, status: 'pending' }))
+    })));
     setCurrentStepIndex(0);
+    setCurrentThinkingStepIndex(0);
   };
 
   const getStepIcon = (status: ProcessingStep['status']) => {
@@ -208,6 +309,17 @@ export default function Home() {
         return <Loader2 className="h-5 w-5 text-blue-600 animate-spin" />;
       default:
         return <Clock className="h-5 w-5 text-gray-400" />;
+    }
+  };
+
+  const getThinkingStepIcon = (status: ThinkingStep['status']) => {
+    switch (status) {
+      case 'completed':
+        return <Check className="h-3 w-3 text-green-600" />;
+      case 'processing':
+        return <Loader2 className="h-3 w-3 text-blue-600 animate-spin" />;
+      default:
+        return <Clock className="h-3 w-3 text-gray-400" />;
     }
   };
 
@@ -222,6 +334,17 @@ export default function Home() {
     }
   };
 
+  const getThinkingStepStyles = (status: ThinkingStep['status']) => {
+    switch (status) {
+      case 'completed':
+        return "text-green-700 bg-green-50 border-green-200";
+      case 'processing':
+        return "text-blue-700 bg-blue-50 border-blue-200 font-medium";
+      default:
+        return "text-gray-600 bg-gray-50 border-gray-200";
+    }
+  };
+
   return (
     <main className="flex flex-1 w-full bg-muted items-center justify-center">
       <div className="w-full max-w-6xl flex flex-col gap-8 p-8">
@@ -233,7 +356,7 @@ export default function Home() {
                 <Plus className="h-5 w-5" /> Create New Claim
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-3xl max-h-[90vh]">
+            <DialogContent className="sm:max-w-4xl max-h-[95vh]">
               <DialogHeader>
                 <DialogTitle>
                   {step === 1
@@ -282,31 +405,31 @@ export default function Home() {
               )}
 
               {step === 1 && isProcessing && (
-                <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
+                <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-4">
                   {currentProcessingSteps.map((processStep, index) => (
                     <div
                       key={processStep.id}
-                      className={`p-4 rounded-xl border-2 ${getStepStyles(processStep.status)}`}
+                      className={`p-6 rounded-xl border-2 ${getStepStyles(processStep.status)}`}
                     >
-                      <div className="flex items-start gap-4">
+                      <div className="flex items-start gap-4 mb-4">
                         <div className="flex-shrink-0 flex flex-col items-center gap-2">
                           <img 
                             src={processStep.logoUrl} 
                             alt={`${processStep.provider} logo`}
-                            className="w-10 h-10 rounded-lg shadow-sm"
+                            className="w-12 h-12 rounded-lg shadow-sm"
                           />
                           {getStepIcon(processStep.status)}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h4 className="font-semibold text-gray-800 truncate">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h4 className="font-semibold text-gray-800 text-lg">
                               {processStep.title}
                             </h4>
-                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full whitespace-nowrap">
+                            <span className="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full whitespace-nowrap font-medium">
                               {processStep.provider}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-600 mb-1">
+                          <p className="text-sm text-gray-600 mb-2">
                             {processStep.description}
                           </p>
                           {processStep.details && (
@@ -316,16 +439,47 @@ export default function Home() {
                           )}
                         </div>
                       </div>
+
+                      {/* Thinking Steps */}
                       {processStep.status === 'processing' && (
-                        <div className="mt-3">
+                        <div className="space-y-2 ml-16">
+                          <p className="text-sm font-medium text-gray-700 mb-3">Processing Steps:</p>
+                          {processStep.thinkingSteps.map((thinkingStep, tsIndex) => (
+                            <div
+                              key={thinkingStep.id}
+                              className={`flex items-center gap-3 p-3 rounded-lg border transition-all duration-300 ${getThinkingStepStyles(thinkingStep.status)}`}
+                            >
+                              {getThinkingStepIcon(thinkingStep.status)}
+                              <span className="text-sm flex-1">{thinkingStep.title}</span>
+                              {thinkingStep.status === 'processing' && (
+                                <span className="text-xs text-blue-600 font-medium">
+                                  {Math.ceil(thinkingStep.duration / 100) / 10}s
+                                </span>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {processStep.status === 'completed' && (
+                        <div className="ml-16">
+                          <div className="flex items-center gap-2 text-green-700">
+                            <Check className="h-4 w-4" />
+                            <span className="text-sm font-medium">All sub-processes completed successfully</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {processStep.status === 'processing' && (
+                        <div className="mt-4">
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div 
                               className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-1000 animate-pulse"
                               style={{ width: '100%' }}
                             />
                           </div>
-                          <p className="text-xs text-blue-600 mt-1 font-medium">
-                            Processing... ({Math.ceil(processStep.duration / 1000)}s)
+                          <p className="text-xs text-blue-600 mt-2 font-medium">
+                            Step {index + 1} of {currentProcessingSteps.length} - Processing...
                           </p>
                         </div>
                       )}
@@ -346,7 +500,7 @@ export default function Home() {
                     </p>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4 max-h-64 overflow-y-auto">
+                  <div className="grid grid-cols-2 gap-4 max-h-80 overflow-y-auto">
                     <div className="bg-gray-50 p-3 rounded-lg">
                       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Claim ID</p>
                       <p className="font-bold text-lg">{generatedClaim.id}</p>
