@@ -88,7 +88,7 @@ function ClaimsTable({
                   variant="outline"
                   onClick={() => onReAppeal(claim)}
                 >
-                  Re-Appeal
+                  Review
                 </Button>
               </TableCell>
             </TableRow>

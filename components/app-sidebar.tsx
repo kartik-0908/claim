@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import Image from "next/image";
 
 // Menu items.
 const items = [
@@ -35,17 +36,23 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-2xl font-bold mb-6">
-            Makai Claim
-          </SidebarGroupLabel>
+         <SidebarGroupLabel className="flex items-center gap-2 text-xl font-bold mb-6">
+  Makai RCM Co-Pilot
+  <Image 
+    height={24} 
+    width={24} 
+    src="/logo/makailogo.png" 
+    alt="Makai logo"
+  />
+</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="pl-4">
+            <SidebarMenu className="pl-4 text-xl">
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem className="text-2xl" key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <a className="text-lg" href={item.url}>
                       <item.icon />
-                      <span>{item.title}</span>
+                      <span className="text-lg">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

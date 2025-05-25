@@ -390,7 +390,7 @@ export default function Home() {
     <main className="flex flex-1 w-full bg-muted items-center justify-center">
       <div className="w-full max-w-6xl flex flex-col gap-8 p-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gray-800">Comprehensive Cardiac Claims System</h1>
+          <h1 className="text-3xl font-bold text-gray-800">Comprehensive Claims System</h1>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="default" className="flex items-center gap-2">
@@ -403,22 +403,22 @@ export default function Home() {
                   {step === 1
                     ? "Upload Patient History"
                     : step === 2
-                    ? "✅ Cardiac Claim Successfully Generated"
+                    ? "✅ Claim Successfully Generated"
                     : ""}
                 </DialogTitle>
                 {step === 1 && !isProcessing && (
                   <DialogDescription>
-                    Please upload the patient cardiac history and medical records (PDF files) to begin automated claim creation.
+                    Please upload the patient history and medical records (PDF files) to begin automated claim creation.
                   </DialogDescription>
                 )}
                 {step === 1 && isProcessing && (
                   <DialogDescription>
-                    Connecting to cardiac healthcare systems and processing your files with medical coding validation...
+                    Connecting to healthcare systems and processing your files with medical coding validation...
                   </DialogDescription>
                 )}
                 {step === 2 && (
                   <DialogDescription>
-                    Comprehensive cardiac claim generated using ALL provided CPT and ICD-10 codes for complete patient workup - from initial presentation through advanced cardiac intervention.
+                    Comprehensive claim generated using ALL provided CPT and ICD-10 codes for complete patient workup - from initial presentation through advanced intervention.
                   </DialogDescription>
                 )}
               </DialogHeader>
@@ -433,12 +433,12 @@ export default function Home() {
                       onChange={handleFileChange}
                       className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
                     />
-                    <p className="text-sm text-gray-500 mt-2">Upload patient cardiac records and diagnostic reports (PDF only)</p>
+                    <p className="text-sm text-gray-500 mt-2">Upload patient records and diagnostic reports (PDF only)</p>
                   </div>
                   {historyFiles && historyFiles.length > 0 && (
                     <div className="bg-blue-50 p-3 rounded-md">
                       <p className="text-sm text-blue-700 font-medium">
-                        🏥 {historyFiles.length} cardiac file(s) selected and ready for processing
+                        🏥 {historyFiles.length} file(s) selected and ready for processing
                       </p>
                     </div>
                   )}
@@ -534,10 +534,10 @@ export default function Home() {
                   <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <CheckCircle2 className="h-5 w-5 text-green-600" />
-                      <span className="font-semibold text-green-800">Comprehensive Cardiac Claim Successfully Generated</span>
+                      <span className="font-semibold text-green-800">Comprehensive Claim Successfully Generated</span>
                     </div>
                     <p className="text-sm text-green-700">
-                      Complete patient workup using ALL provided CPT and ICD-10 codes - from initial evaluation through advanced cardiac procedures
+                      Complete patient workup using ALL provided CPT and ICD-10 codes - from initial evaluation through advanced procedures
                     </p>
                   </div>
                   
@@ -621,7 +621,7 @@ export default function Home() {
                     disabled={!historyFiles || historyFiles.length === 0}
                     className="bg-blue-600 hover:bg-blue-700"
                   >
-                    🚀 Start Cardiac Processing
+                    🚀 Start Processing
                   </Button>
                 )}
                 {step === 2 && (
