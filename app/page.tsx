@@ -58,84 +58,40 @@ interface ProcessingStep {
   thinkingSteps: ThinkingStep[];
 }
 
-// Updated claims data using the provided medical codes
+// Comprehensive single patient claim using ALL provided medical codes
 const pendingClaims: Claim[] = [
   {
     id: 1001,
     claimant: "Michael Rodriguez",
-    amount: "$3,847.50",
+    amount: "$8,947.50",
     date: "2024-05-20",
     status: "Generated",
-    description: "Chest Pain Evaluation with Cardiac Workup",
-    provider: "Cardiology Associates of Metro Health",
+    description: "Complete Cardiac Workup - Chest Pain with Multiple Risk Factors",
+    provider: "Metropolitan Cardiac Center",
     providerNPI: "1234567890",
-    serviceType: "Emergency/Urgent Care",
+    serviceType: "Comprehensive Cardiac Evaluation",
     serviceDate: "2024-05-18",
-    serviceInfo: "Comprehensive cardiac evaluation for acute chest pain with risk factors",
-    diagnosisCode: "R07.9", // Chest pain, unspecified
-    secondaryDiagnosisCode: "I10", // Essential hypertension
-    procedureCodes: ["99223", "93000", "84484", "82553", "85025", "80048", "71046"],
+    serviceInfo: "Complete cardiac workup from initial presentation through advanced intervention for chest pain patient with diabetes, hypertension, hyperlipidemia, and smoking history",
+    diagnosisCode: "R07.9", // Primary: Chest pain, unspecified
+    secondaryDiagnosisCode: "I10,E78.5,E11.9,Z87.891", // All secondary diagnoses
+    procedureCodes: ["99223", "93000", "84484", "82553", "85025", "80048", "80061", "83036", "71046", "93306", "78452", "75574", "93458", "99214"],
     procedureServiceTypes: [
-      "Initial hospital care, high complexity E/M", 
-      "12-lead ECG with interpretation", 
+      "Initial hospital/observation care, high complexity E/M",
+      "12-lead ECG with interpretation & report", 
       "Troponin I, quantitative", 
-      "Creatine kinase MB fraction",
-      "Complete blood count with differential",
-      "Basic metabolic panel",
-      "Chest X-ray, 2 views"
-    ],
-    procedureAmounts: ["$450.00", "$125.00", "$95.00", "$78.00", "$65.00", "$85.00", "$180.00"],
-    documentationList: []
-  },
-  {
-    id: 1002,
-    claimant: "Sarah Johnson",
-    amount: "$2,240.75",
-    date: "2024-05-19",
-    status: "Generated",
-    description: "Diabetes Management with Cardiac Risk Assessment",
-    provider: "Metro Internal Medicine Group",
-    providerNPI: "9876543210",
-    serviceType: "Preventive Care",
-    serviceDate: "2024-05-17",
-    serviceInfo: "Comprehensive diabetes follow-up with cardiovascular screening",
-    diagnosisCode: "E11.9", // Type 2 diabetes mellitus without complications
-    secondaryDiagnosisCode: "E78.5", // Hyperlipidemia, unspecified
-    procedureCodes: ["99214", "83036", "80061", "93000", "85025"],
-    procedureServiceTypes: [
-      "Office visit, moderate complexity E/M",
+      "Creatine kinase (CK), MB fraction",
+      "Complete blood count (CBC), automated with differential",
+      "Basic metabolic panel (BMP)",
+      "Lipid panel",
       "Hemoglobin A1c",
-      "Lipid panel", 
-      "12-lead ECG with interpretation",
-      "Complete blood count with differential"
+      "Chest X-ray, 2 views (PA & lateral)",
+      "Transthoracic echocardiography, complete w/ Doppler & color flow",
+      "Myocardial perfusion imaging, tomographic (SPECT), multiple studies",
+      "Coronary CT angiography (CCTA) with contrast, incl. 3-D post-processing",
+      "Left-heart catheterization with coronary angiography",
+      "Office visit, moderate complexity E/M"
     ],
-    procedureAmounts: ["$285.00", "$75.00", "$120.00", "$125.00", "$65.00"],
-    documentationList: []
-  },
-  {
-    id: 1003,
-    claimant: "Robert Chen",
-    amount: "$4,950.25",
-    date: "2024-05-21",
-    status: "Generated", 
-    description: "Advanced Cardiac Imaging and Assessment",
-    provider: "Metropolitan Cardiology Center",
-    providerNPI: "5555666677",
-    serviceType: "Diagnostic Imaging",
-    serviceDate: "2024-05-20",
-    serviceInfo: "Comprehensive cardiac evaluation with advanced imaging for former smoker",
-    diagnosisCode: "Z87.891", // Personal history of nicotine dependence (former smoker)
-    secondaryDiagnosisCode: "R07.9", // Chest pain, unspecified
-    procedureCodes: ["99223", "93306", "78452", "75574", "80048", "84484"],
-    procedureServiceTypes: [
-      "Initial hospital care, high complexity E/M",
-      "Transthoracic echocardiography complete",
-      "Myocardial perfusion imaging (SPECT)",
-      "Coronary CT angiography with contrast",
-      "Basic metabolic panel",
-      "Troponin I, quantitative"
-    ],
-    procedureAmounts: ["$450.00", "$875.00", "$1,250.00", "$1,800.00", "$85.00", "$95.00"],
+    procedureAmounts: ["$450.00", "$125.00", "$95.00", "$78.00", "$65.00", "$85.00", "$120.00", "$75.00", "$180.00", "$875.00", "$1,250.00", "$1,800.00", "$3,500.00", "$285.00"],
     documentationList: []
   }
 ];
@@ -256,9 +212,9 @@ const icd10Codes = {
 
 export default function Home() {
   const analytics = {
-    pending: 15,
-    denied: 3,
-    approvedAmount: 87650,
+    pending: 8,
+    denied: 2,
+    approvedAmount: 127450,
   };
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -293,9 +249,8 @@ export default function Home() {
 
   const processNextStep = (stepIndex: number) => {
     if (stepIndex >= processingSteps.length) {
-      // Randomly select one of the cardiac claims
-      const randomClaim = pendingClaims[Math.floor(Math.random() * pendingClaims.length)];
-      setGeneratedClaim(randomClaim);
+      // Use the comprehensive single patient claim
+      setGeneratedClaim(pendingClaims[0]);
       setIsProcessing(false);
       setStep(2);
       return;
@@ -435,7 +390,7 @@ export default function Home() {
     <main className="flex flex-1 w-full bg-muted items-center justify-center">
       <div className="w-full max-w-6xl flex flex-col gap-8 p-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gray-800">Cardiac Claims Analytics</h1>
+          <h1 className="text-3xl font-bold text-gray-800">Comprehensive Cardiac Claims System</h1>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="default" className="flex items-center gap-2">
@@ -463,7 +418,7 @@ export default function Home() {
                 )}
                 {step === 2 && (
                   <DialogDescription>
-                    Your cardiac claim has been generated with appropriate CPT and ICD-10 codes validated across multiple healthcare systems.
+                    Comprehensive cardiac claim generated using ALL provided CPT and ICD-10 codes for complete patient workup - from initial presentation through advanced cardiac intervention.
                   </DialogDescription>
                 )}
               </DialogHeader>
@@ -579,14 +534,29 @@ export default function Home() {
                   <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <CheckCircle2 className="h-5 w-5 text-green-600" />
-                      <span className="font-semibold text-green-800">Cardiac Claim Successfully Generated</span>
+                      <span className="font-semibold text-green-800">Comprehensive Cardiac Claim Successfully Generated</span>
                     </div>
                     <p className="text-sm text-green-700">
-                      All cardiac systems validated and medical codes assigned automatically
+                      Complete patient workup using ALL provided CPT and ICD-10 codes - from initial evaluation through advanced cardiac procedures
                     </p>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4 max-h-96 overflow-y-auto">
+                  {/* Quick Summary */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 className="font-semibold text-blue-800 mb-2">📋 Complete Workup Summary</h3>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="font-medium text-blue-700">Total CPT Codes: {generatedClaim.procedureCodes.length}</p>
+                        <p className="text-blue-600">From basic labs to cardiac catheterization</p>
+                      </div>
+                      <div>
+                        <p className="font-medium text-blue-700">Total ICD-10 Codes: {1 + generatedClaim.secondaryDiagnosisCode.split(',').length}</p>
+                        <p className="text-blue-600">Primary complaint + risk factors</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 max-h-40 overflow-y-auto">
                     <div className="bg-gray-50 p-3 rounded-lg">
                       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Claim ID</p>
                       <p className="font-bold text-lg">{generatedClaim.id}</p>
@@ -612,10 +582,16 @@ export default function Home() {
                       <p className="font-mono font-semibold text-blue-600">{generatedClaim.diagnosisCode}</p>
                       <p className="text-xs text-gray-600 mt-1">{icd10Codes[generatedClaim.diagnosisCode as keyof typeof icd10Codes]}</p>
                     </div>
-                    <div className="bg-purple-50 p-3 rounded-lg">
-                      <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Secondary Diagnosis</p>
-                      <p className="font-mono font-semibold text-purple-600">{generatedClaim.secondaryDiagnosisCode}</p>
-                      <p className="text-xs text-gray-600 mt-1">{icd10Codes[generatedClaim.secondaryDiagnosisCode as keyof typeof icd10Codes]}</p>
+                    <div className="bg-purple-50 p-3 rounded-lg col-span-2">
+                      <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Secondary Diagnoses (ICD-10)</p>
+                      <div className="space-y-1 mt-2">
+                        {generatedClaim.secondaryDiagnosisCode.split(',').map((code, index) => (
+                          <div key={code.trim()} className="flex justify-between items-center">
+                            <span className="font-mono font-semibold text-purple-600">{code.trim()}</span>
+                            <span className="text-xs text-gray-600 flex-1 ml-3">{icd10Codes[code.trim() as keyof typeof icd10Codes]}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                     <div className="bg-orange-50 p-3 rounded-lg col-span-2">
                       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">CPT Procedure Codes</p>
