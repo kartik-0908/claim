@@ -58,25 +58,84 @@ interface ProcessingStep {
   thinkingSteps: ThinkingStep[];
 }
 
-// Example pending claims data
+// Updated claims data using the provided medical codes
 const pendingClaims: Claim[] = [
   {
     id: 1001,
-    claimant: "John Smith",
-    amount: "$2,450.00",
+    claimant: "Michael Rodriguez",
+    amount: "$3,847.50",
     date: "2024-05-20",
     status: "Generated",
-    description: "Routine Physical Examination with Lab Work",
-    provider: "Metro Health Center",
+    description: "Chest Pain Evaluation with Cardiac Workup",
+    provider: "Cardiology Associates of Metro Health",
     providerNPI: "1234567890",
-    serviceType: "Preventive Care",
+    serviceType: "Emergency/Urgent Care",
     serviceDate: "2024-05-18",
-    serviceInfo: "Annual physical with comprehensive metabolic panel",
-    diagnosisCode: "Z00.00",
-    secondaryDiagnosisCode: "Z01.411",
-    procedureCodes: ["99213", "80053", "85025"],
-    procedureServiceTypes: ["Office Visit", "Basic Metabolic Panel", "Complete Blood Count"],
-    procedureAmounts: ["$150.00", "$45.00", "$25.00"],
+    serviceInfo: "Comprehensive cardiac evaluation for acute chest pain with risk factors",
+    diagnosisCode: "R07.9", // Chest pain, unspecified
+    secondaryDiagnosisCode: "I10", // Essential hypertension
+    procedureCodes: ["99223", "93000", "84484", "82553", "85025", "80048", "71046"],
+    procedureServiceTypes: [
+      "Initial hospital care, high complexity E/M", 
+      "12-lead ECG with interpretation", 
+      "Troponin I, quantitative", 
+      "Creatine kinase MB fraction",
+      "Complete blood count with differential",
+      "Basic metabolic panel",
+      "Chest X-ray, 2 views"
+    ],
+    procedureAmounts: ["$450.00", "$125.00", "$95.00", "$78.00", "$65.00", "$85.00", "$180.00"],
+    documentationList: []
+  },
+  {
+    id: 1002,
+    claimant: "Sarah Johnson",
+    amount: "$2,240.75",
+    date: "2024-05-19",
+    status: "Generated",
+    description: "Diabetes Management with Cardiac Risk Assessment",
+    provider: "Metro Internal Medicine Group",
+    providerNPI: "9876543210",
+    serviceType: "Preventive Care",
+    serviceDate: "2024-05-17",
+    serviceInfo: "Comprehensive diabetes follow-up with cardiovascular screening",
+    diagnosisCode: "E11.9", // Type 2 diabetes mellitus without complications
+    secondaryDiagnosisCode: "E78.5", // Hyperlipidemia, unspecified
+    procedureCodes: ["99214", "83036", "80061", "93000", "85025"],
+    procedureServiceTypes: [
+      "Office visit, moderate complexity E/M",
+      "Hemoglobin A1c",
+      "Lipid panel", 
+      "12-lead ECG with interpretation",
+      "Complete blood count with differential"
+    ],
+    procedureAmounts: ["$285.00", "$75.00", "$120.00", "$125.00", "$65.00"],
+    documentationList: []
+  },
+  {
+    id: 1003,
+    claimant: "Robert Chen",
+    amount: "$4,950.25",
+    date: "2024-05-21",
+    status: "Generated", 
+    description: "Advanced Cardiac Imaging and Assessment",
+    provider: "Metropolitan Cardiology Center",
+    providerNPI: "5555666677",
+    serviceType: "Diagnostic Imaging",
+    serviceDate: "2024-05-20",
+    serviceInfo: "Comprehensive cardiac evaluation with advanced imaging for former smoker",
+    diagnosisCode: "Z87.891", // Personal history of nicotine dependence (former smoker)
+    secondaryDiagnosisCode: "R07.9", // Chest pain, unspecified
+    procedureCodes: ["99223", "93306", "78452", "75574", "80048", "84484"],
+    procedureServiceTypes: [
+      "Initial hospital care, high complexity E/M",
+      "Transthoracic echocardiography complete",
+      "Myocardial perfusion imaging (SPECT)",
+      "Coronary CT angiography with contrast",
+      "Basic metabolic panel",
+      "Troponin I, quantitative"
+    ],
+    procedureAmounts: ["$450.00", "$875.00", "$1,250.00", "$1,800.00", "$85.00", "$95.00"],
     documentationList: []
   }
 ];
@@ -85,95 +144,121 @@ const processingSteps: ProcessingStep[] = [
   {
     id: 1,
     title: "Connecting to Epic MyChart EHR",
-    description: "Retrieving patient medical history and records",
+    description: "Retrieving patient medical history and cardiac records",
     provider: "Epic Systems",
     logoUrl: "/logo/epic.png",
     duration: 2500,
     status: 'pending',
-    details: "Accessing patient ID: JS-001247",
+    details: "Accessing cardiac patient database",
     thinkingSteps: [
       { id: 1, title: "Establishing secure connection to Epic servers", duration: 500, status: 'pending' },
       { id: 2, title: "Authenticating with healthcare credentials", duration: 400, status: 'pending' },
-      { id: 3, title: "Locating patient record in Epic database", duration: 600, status: 'pending' },
-      { id: 4, title: "Retrieving complete medical history", duration: 700, status: 'pending' },
-      { id: 5, title: "Downloading recent visit summaries", duration: 300, status: 'pending' }
+      { id: 3, title: "Locating patient cardiac history records", duration: 600, status: 'pending' },
+      { id: 4, title: "Retrieving ECG and lab results", duration: 700, status: 'pending' },
+      { id: 5, title: "Downloading recent cardiac assessments", duration: 300, status: 'pending' }
     ]
   },
   {
     id: 2,
     title: "Fetching UnitedHealthcare Coverage",
-    description: "Verifying active insurance policy and benefits",
+    description: "Verifying cardiac procedure benefits and authorization",
     provider: "UnitedHealthcare",
     logoUrl: "/logo/united.png",
     duration: 2000,
     status: 'pending',
-    details: "Policy: UHC-789456123",
+    details: "Validating cardiology coverage limits",
     thinkingSteps: [
       { id: 1, title: "Connecting to UnitedHealthcare portal", duration: 400, status: 'pending' },
-      { id: 2, title: "Verifying member ID and policy status", duration: 500, status: 'pending' },
-      { id: 3, title: "Checking active coverage periods", duration: 450, status: 'pending' },
-      { id: 4, title: "Retrieving benefit details and limits", duration: 400, status: 'pending' },
-      { id: 5, title: "Validating copay and deductible info", duration: 250, status: 'pending' }
+      { id: 2, title: "Verifying cardiac procedure coverage", duration: 500, status: 'pending' },
+      { id: 3, title: "Checking imaging study authorizations", duration: 450, status: 'pending' },
+      { id: 4, title: "Retrieving specialist referral requirements", duration: 400, status: 'pending' },
+      { id: 5, title: "Validating emergency care provisions", duration: 250, status: 'pending' }
     ]
   },
   {
     id: 3,
     title: "Checking Aetna Authorization Requirements",
-    description: "Reviewing pre-authorization and coverage policies",
+    description: "Reviewing cardiac imaging pre-authorization policies",
     provider: "Aetna",
     logoUrl: "/logo/aetna.png",
     duration: 2800,
     status: 'pending',
-    details: "Validating procedure coverage",
+    details: "Validating advanced cardiac procedures",
     thinkingSteps: [
-      { id: 1, title: "Accessing Aetna authorization systems", duration: 600, status: 'pending' },
-      { id: 2, title: "Cross-referencing procedure requirements", duration: 700, status: 'pending' },
-      { id: 3, title: "Checking pre-authorization needs", duration: 500, status: 'pending' },
-      { id: 4, title: "Validating coverage limits and exclusions", duration: 600, status: 'pending' },
-      { id: 5, title: "Confirming in-network provider status", duration: 400, status: 'pending' }
+      { id: 1, title: "Accessing Aetna cardiology guidelines", duration: 600, status: 'pending' },
+      { id: 2, title: "Cross-referencing imaging requirements", duration: 700, status: 'pending' },
+      { id: 3, title: "Checking troponin/cardiac enzyme coverage", duration: 500, status: 'pending' },
+      { id: 4, title: "Validating ECG and echo approvals", duration: 600, status: 'pending' },
+      { id: 5, title: "Confirming cardiology network status", duration: 400, status: 'pending' }
     ]
   },
   {
     id: 4,
     title: "Assigning CPT/ICD-10 Codes",
-    description: "Generating appropriate medical billing codes",
+    description: "Applying accurate cardiac billing codes from database",
     provider: "Makai",
     logoUrl: "/logo/makailogo.png",
     duration: 3200,
     status: 'pending',
-    details: "Cross-referencing procedure database",
+    details: "Cross-referencing cardiac procedure database",
     thinkingSteps: [
-      { id: 1, title: "Analyzing medical procedures performed", duration: 800, status: 'pending' },
-      { id: 2, title: "Cross-referencing diagnosis information", duration: 600, status: 'pending' },
-      { id: 3, title: "Generating appropriate CPT codes", duration: 700, status: 'pending' },
-      { id: 4, title: "Assigning accurate ICD-10 codes", duration: 650, status: 'pending' },
-      { id: 5, title: "Validating code accuracy and compliance", duration: 450, status: 'pending' }
+      { id: 1, title: "Analyzing cardiac procedures performed", duration: 800, status: 'pending' },
+      { id: 2, title: "Mapping chest pain diagnosis codes", duration: 600, status: 'pending' },
+      { id: 3, title: "Assigning appropriate CPT codes (93000, 84484, etc.)", duration: 700, status: 'pending' },
+      { id: 4, title: "Validating ICD-10 codes (R07.9, I10, E78.5)", duration: 650, status: 'pending' },
+      { id: 5, title: "Ensuring cardiac coding compliance", duration: 450, status: 'pending' }
     ]
   },
   {
     id: 5,
     title: "Finalizing with Waystar Revenue Cycle",
-    description: "Completing claim validation and submission prep",
+    description: "Completing cardiac claim validation and submission prep",
     provider: "Waystar",
     logoUrl: "/logo/way.png",
     duration: 1500,
     status: 'pending',
-    details: "Ready for submission",
+    details: "Ready for cardiology claim submission",
     thinkingSteps: [
-      { id: 1, title: "Connecting to Waystar platform", duration: 300, status: 'pending' },
-      { id: 2, title: "Validating claim format and structure", duration: 400, status: 'pending' },
-      { id: 3, title: "Checking submission rules and requirements", duration: 350, status: 'pending' },
-      { id: 4, title: "Preparing final claim documents", duration: 300, status: 'pending' },
-      { id: 5, title: "Claim ready for insurance submission", duration: 150, status: 'pending' }
+      { id: 1, title: "Connecting to Waystar cardiac billing", duration: 300, status: 'pending' },
+      { id: 2, title: "Validating cardiac claim format", duration: 400, status: 'pending' },
+      { id: 3, title: "Checking cardiology submission rules", duration: 350, status: 'pending' },
+      { id: 4, title: "Preparing final cardiac claim documents", duration: 300, status: 'pending' },
+      { id: 5, title: "Cardiac claim ready for insurance submission", duration: 150, status: 'pending' }
     ]
   }
 ];
 
+// Medical code reference data
+const cptCodes = {
+  "99223": "Initial hospital/observation care, high complexity E/M",
+  "93000": "12-lead ECG with interpretation & report",
+  "84484": "Troponin I, quantitative",
+  "82553": "Creatine kinase (CK), MB fraction",
+  "85025": "Complete blood count (CBC), automated with differential",
+  "80048": "Basic metabolic panel (BMP)",
+  "80061": "Lipid panel",
+  "83036": "Hemoglobin A1c",
+  "71046": "Chest X-ray, 2 views (PA & lateral)",
+  "93306": "Transthoracic echocardiography, complete w/ Doppler & color flow",
+  "78452": "Myocardial perfusion imaging, tomographic (SPECT), multiple studies",
+  "75574": "Coronary CT angiography (CCTA) with contrast, incl. 3-D post-processing",
+  "93458": "Left-heart catheterization with coronary angiography",
+  "99214": "Office visit, moderate complexity E/M"
+};
+
+const icd10Codes = {
+  "R07.9": "Chest pain, unspecified",
+  "I10": "Essential (primary) hypertension",
+  "E78.5": "Hyperlipidemia, unspecified",
+  "E11.9": "Type 2 diabetes mellitus without complications",
+  "Z87.891": "Personal history of nicotine dependence (former smoker)"
+};
+
 export default function Home() {
   const analytics = {
-    pending: 12,
-    denied: 5,
-    approvedAmount: 24500,
+    pending: 15,
+    denied: 3,
+    approvedAmount: 87650,
   };
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -208,8 +293,9 @@ export default function Home() {
 
   const processNextStep = (stepIndex: number) => {
     if (stepIndex >= processingSteps.length) {
-      // All steps completed
-      setGeneratedClaim(pendingClaims[0]);
+      // Randomly select one of the cardiac claims
+      const randomClaim = pendingClaims[Math.floor(Math.random() * pendingClaims.length)];
+      setGeneratedClaim(randomClaim);
       setIsProcessing(false);
       setStep(2);
       return;
@@ -349,7 +435,7 @@ export default function Home() {
     <main className="flex flex-1 w-full bg-muted items-center justify-center">
       <div className="w-full max-w-6xl flex flex-col gap-8 p-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gray-800">Claims Analytics</h1>
+          <h1 className="text-3xl font-bold text-gray-800">Cardiac Claims Analytics</h1>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="default" className="flex items-center gap-2">
@@ -362,22 +448,22 @@ export default function Home() {
                   {step === 1
                     ? "Upload Patient History"
                     : step === 2
-                    ? "✅ Claim Successfully Generated"
+                    ? "✅ Cardiac Claim Successfully Generated"
                     : ""}
                 </DialogTitle>
                 {step === 1 && !isProcessing && (
                   <DialogDescription>
-                    Please upload the patient history PDF files to begin automated claim creation.
+                    Please upload the patient cardiac history and medical records (PDF files) to begin automated claim creation.
                   </DialogDescription>
                 )}
                 {step === 1 && isProcessing && (
                   <DialogDescription>
-                    Connecting to healthcare systems and processing your files...
+                    Connecting to cardiac healthcare systems and processing your files with medical coding validation...
                   </DialogDescription>
                 )}
                 {step === 2 && (
                   <DialogDescription>
-                    Your claim has been generated and validated across multiple healthcare systems.
+                    Your cardiac claim has been generated with appropriate CPT and ICD-10 codes validated across multiple healthcare systems.
                   </DialogDescription>
                 )}
               </DialogHeader>
@@ -392,12 +478,12 @@ export default function Home() {
                       onChange={handleFileChange}
                       className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
                     />
-                    <p className="text-sm text-gray-500 mt-2">Upload patient medical records (PDF only)</p>
+                    <p className="text-sm text-gray-500 mt-2">Upload patient cardiac records and diagnostic reports (PDF only)</p>
                   </div>
                   {historyFiles && historyFiles.length > 0 && (
                     <div className="bg-blue-50 p-3 rounded-md">
                       <p className="text-sm text-blue-700 font-medium">
-                        📁 {historyFiles.length} file(s) selected and ready for processing
+                        🏥 {historyFiles.length} cardiac file(s) selected and ready for processing
                       </p>
                     </div>
                   )}
@@ -493,14 +579,14 @@ export default function Home() {
                   <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <CheckCircle2 className="h-5 w-5 text-green-600" />
-                      <span className="font-semibold text-green-800">Claim Successfully Generated</span>
+                      <span className="font-semibold text-green-800">Cardiac Claim Successfully Generated</span>
                     </div>
                     <p className="text-sm text-green-700">
-                      All systems validated and medical codes assigned automatically
+                      All cardiac systems validated and medical codes assigned automatically
                     </p>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4 max-h-80 overflow-y-auto">
+                  <div className="grid grid-cols-2 gap-4 max-h-96 overflow-y-auto">
                     <div className="bg-gray-50 p-3 rounded-lg">
                       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Claim ID</p>
                       <p className="font-bold text-lg">{generatedClaim.id}</p>
@@ -521,13 +607,27 @@ export default function Home() {
                       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Description</p>
                       <p className="font-semibold">{generatedClaim.description}</p>
                     </div>
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">CPT Codes</p>
-                      <p className="font-mono font-semibold text-blue-600">{generatedClaim.procedureCodes.join(", ")}</p>
+                    <div className="bg-blue-50 p-3 rounded-lg">
+                      <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Primary Diagnosis</p>
+                      <p className="font-mono font-semibold text-blue-600">{generatedClaim.diagnosisCode}</p>
+                      <p className="text-xs text-gray-600 mt-1">{icd10Codes[generatedClaim.diagnosisCode as keyof typeof icd10Codes]}</p>
                     </div>
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">ICD-10 Code</p>
-                      <p className="font-mono font-semibold text-purple-600">{generatedClaim.diagnosisCode}</p>
+                    <div className="bg-purple-50 p-3 rounded-lg">
+                      <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Secondary Diagnosis</p>
+                      <p className="font-mono font-semibold text-purple-600">{generatedClaim.secondaryDiagnosisCode}</p>
+                      <p className="text-xs text-gray-600 mt-1">{icd10Codes[generatedClaim.secondaryDiagnosisCode as keyof typeof icd10Codes]}</p>
+                    </div>
+                    <div className="bg-orange-50 p-3 rounded-lg col-span-2">
+                      <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">CPT Procedure Codes</p>
+                      <div className="space-y-1 mt-2">
+                        {generatedClaim.procedureCodes.map((code, index) => (
+                          <div key={code} className="flex justify-between items-center">
+                            <span className="font-mono font-semibold text-orange-600">{code}</span>
+                            <span className="text-xs text-gray-600">{cptCodes[code as keyof typeof cptCodes]}</span>
+                            <span className="text-sm font-semibold text-green-600">{generatedClaim.procedureAmounts[index]}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                     <div className="bg-gray-50 p-3 rounded-lg col-span-2">
                       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Healthcare Provider</p>
@@ -545,7 +645,7 @@ export default function Home() {
                     disabled={!historyFiles || historyFiles.length === 0}
                     className="bg-blue-600 hover:bg-blue-700"
                   >
-                    🚀 Start Processing
+                    🚀 Start Cardiac Processing
                   </Button>
                 )}
                 {step === 2 && (
