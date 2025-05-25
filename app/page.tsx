@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { BarChart2, FileX2, CheckCircle2, Plus, Loader2, Check, Clock } from "lucide-react";
+import { BarChart2, FileX2, CheckCircle2, Plus, Loader2, Check, Clock, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,6 +12,12 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export interface Claim {
   id: number;
@@ -342,6 +348,15 @@ export default function Home() {
     setCurrentThinkingStepIndex(0);
   };
 
+  const handleCreateNewClaim = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleCreateNewPriorAuth = () => {
+    // Do nothing for now - placeholder for future functionality
+    console.log("Create New Prior Auth clicked - functionality to be implemented");
+  };
+
   const getStepIcon = (status: ProcessingStep['status']) => {
     switch (status) {
       case 'completed':
@@ -391,12 +406,30 @@ export default function Home() {
       <div className="w-full max-w-6xl flex flex-col gap-8 p-8">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-gray-800">Comprehensive Claims System</h1>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
+          
+          {/* Dropdown Menu for Create New Request */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
               <Button variant="default" className="flex items-center gap-2">
-                <Plus className="h-5 w-5" /> Create New Claim
+                <Plus className="h-5 w-5" /> 
+                Create New Request
+                <ChevronDown className="h-4 w-4" />
               </Button>
-            </DialogTrigger>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuItem onClick={handleCreateNewClaim} className="flex items-center gap-2 cursor-pointer">
+                <Plus className="h-4 w-4" />
+                Create New Claim
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleCreateNewPriorAuth} className="flex items-center gap-2 cursor-pointer">
+                <Plus className="h-4 w-4" />
+                Create New Prior Auth
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Dialog for Create New Claim */}
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent className="sm:max-w-4xl max-h-[95vh]">
               <DialogHeader>
                 <DialogTitle>
