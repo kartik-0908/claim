@@ -84,23 +84,23 @@ export interface ProcessingStep {
 
 
 export const processingSteps: ProcessingStep[] = [
-  {
-    id: 1,
-    title: "Connecting to Epic MyChart EHR",
-    description: "Retrieving patient medical history and cardiac records",
-    provider: "Epic Systems",
-    logoUrl: "/logo/epic.png",
-    duration: 2500,
-    status: 'pending',
-    details: "Accessing cardiac patient database",
-    thinkingSteps: [
-      { id: 1, title: "Establishing secure connection to Epic servers", duration: 500, status: 'pending' },
-      { id: 2, title: "Authenticating with healthcare credentials", duration: 400, status: 'pending' },
-      { id: 3, title: "Locating patient cardiac history records", duration: 600, status: 'pending' },
-      { id: 4, title: "Retrieving ECG and lab results", duration: 700, status: 'pending' },
-      { id: 5, title: "Downloading recent cardiac assessments", duration: 300, status: 'pending' }
-    ]
-  },
+  // {
+  //   id: 1,
+  //   title: "Connecting to Epic MyChart EHR",
+  //   description: "Retrieving patient medical history and cardiac records",
+  //   provider: "Epic Systems",
+  //   logoUrl: "/logo/epic.png",
+  //   duration: 2500,
+  //   status: 'pending',
+  //   details: "Accessing cardiac patient database",
+  //   thinkingSteps: [
+  //     { id: 1, title: "Establishing secure connection to Epic servers", duration: 500, status: 'pending' },
+  //     { id: 2, title: "Authenticating with healthcare credentials", duration: 400, status: 'pending' },
+  //     { id: 3, title: "Locating patient cardiac history records", duration: 600, status: 'pending' },
+  //     { id: 4, title: "Retrieving ECG and lab results", duration: 700, status: 'pending' },
+  //     { id: 5, title: "Downloading recent cardiac assessments", duration: 300, status: 'pending' }
+  //   ]
+  // },
   {
     id: 2,
     title: "Fetching UnitedHealthcare Coverage",

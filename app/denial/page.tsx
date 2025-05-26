@@ -52,6 +52,19 @@ function ClaimsTable({
   data: typeof deniedClaims;
   onReAppeal: (claim: any) => void;
 }) {
+  const getStatusColor = (status: string) => {
+    const statusLower = status.toLowerCase();
+    if (statusLower.includes('approved') || statusLower.includes('accept')) {
+      return "bg-green-100 text-green-800";
+    } else if (statusLower.includes('denied') || statusLower.includes('reject')) {
+      return "bg-red-100 text-red-800";
+    } else if (statusLower.includes('pending') || statusLower.includes('review')) {
+      return "bg-yellow-100 text-yellow-800";
+    } else {
+      return "bg-gray-100 text-gray-800";
+    }
+  };
+
   return (
     <div className="rounded-xl border shadow-lg overflow-hidden bg-white w-full">
       <Table className="w-full">
@@ -78,7 +91,7 @@ function ClaimsTable({
                 {claim.denialReason}
               </TableCell>
               <TableCell>
-                <span className="px-2 py-1 rounded text-xs font-semibold bg-red-100 text-red-800">
+                <span className={`px-2 py-1 rounded text-xs font-semibold ${getStatusColor(claim.status)}`}>
                   {claim.status}
                 </span>
               </TableCell>
@@ -99,7 +112,6 @@ function ClaimsTable({
   );
 }
 
-// ...existing code...
 function ReAppealDialog({
   claim,
   onOpenChange,
@@ -107,8 +119,18 @@ function ReAppealDialog({
   claim: any;
   onOpenChange: (open: boolean) => void;
 }) {
-  const handleGenerateAppeal = () => {
-    alert("Appeal letter generated!");
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerateAppeal = async () => {
+    setIsGenerating(true);
+    
+    // Show loading state for 3 seconds
+    setTimeout(() => {
+      setIsGenerating(false);
+      // Open the PDF from public folder
+      const pdfUrl = '/claimappeal.pdf'; // Update with your actual PDF filename
+      window.open(pdfUrl, '_blank');
+    }, 3000);
   };
 
   return (
@@ -222,8 +244,20 @@ function ReAppealDialog({
             </div>
             {/* Appeal Action */}
             <div className="flex gap-4">
-              <Button variant="default" onClick={handleGenerateAppeal}>
-                Generate Appeal Letter
+              <Button 
+                variant="default" 
+                onClick={handleGenerateAppeal}
+                disabled={isGenerating}
+                className="relative"
+              >
+                {isGenerating ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Generating Appeal...
+                  </>
+                ) : (
+                  "Generate Appeal Letter"
+                )}
               </Button>
             </div>
           </div>
@@ -237,4 +271,3 @@ function ReAppealDialog({
     </Dialog>
   );
 }
-// ...existing code...

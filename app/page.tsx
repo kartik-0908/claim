@@ -180,7 +180,7 @@ export default function Home() {
 
   const handleShowRecommendations = () => {
   // Option 1: Direct URL to PDF file
-  const pdfUrl = 'https://claim.makaicare.com/public/claimrecommendation'; // Update with your actual PDF path
+  const pdfUrl = '/claimrecommendation.pdf'; // Update with your actual PDF path
   window.open(pdfUrl, '_blank');
 };
 

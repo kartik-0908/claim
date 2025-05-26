@@ -30,8 +30,8 @@ const items = [
     icon: Ban,
   },
   {
-    title: "Alert",
-    url: "alert",
+    title: "Notifications",
+    url: "notify",
     icon: AlertCircle,
   },
 ];
