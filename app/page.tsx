@@ -40,8 +40,8 @@ import {
 
 export default function Home() {
   const analytics = {
-    pending: 8,
-    denied: 2,
+    pending: 18,
+    denied: 12,
     approvedAmount: 127450,
   };
 
