@@ -1,4 +1,4 @@
-import { FileText, Ban, Home } from "lucide-react";
+import { FileText, Ban, Home, AlertCircle } from "lucide-react";
 
 import {
   Sidebar,
@@ -29,6 +29,11 @@ const items = [
     url: "denial",
     icon: Ban,
   },
+  {
+    title: "Alert",
+    url: "alert",
+    icon: AlertCircle,
+  },
 ];
 
 export function AppSidebar() {
@@ -36,8 +41,8 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-         <SidebarGroupLabel className="flex items-center gap-2 text-xl font-bold mb-6">
-  Makai RCM Co-Pilot
+         <SidebarGroupLabel className="flex items-center gap-2 text-lg font-bold mb-6">
+  MAKAI RCM COPILOT
   <Image 
     height={24} 
     width={24} 
