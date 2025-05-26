@@ -1,11 +1,3 @@
-// Synthetic claims data refined for greater realism in payer‑system demos.
-// ────────────────────────────────────────────────────────────────────
-// • Claim IDs now follow a common payer Control Number pattern: YYYYMMDD#####
-//   (date of claim entry + 3‑digit sequence). All IDs remain < 2^53 for JS safety.
-// • Dollar amounts are closer to typical billed charges.
-// • Service, diagnosis, and procedure codes better match each scenario.
-// • Minor data‑quality tweaks (consistent statuses, believable descriptions, etc.).
-
 export const pendingClaims = [
   {
     id: 202505100101,
@@ -453,7 +445,7 @@ export const submittedClaims = [
     claimant: "Mohammed Al‑Farsi",
     amount: "$18,650.00",
     date: "2025-04-30",
-    status: "Submitted",
+    status: "Awaiting Approval",
     description:
       "Arthroscopic knee surgery with meniscal repair reimbursement.",
     provider: "Dr. Emily Watson",
@@ -476,7 +468,7 @@ export const submittedClaims = [
     claimant: "Julia Park",
     amount: "$640.00",
     date: "2025-04-27",
-    status: "Submitted",
+    status: "Awaiting Approval",
     description:
       "Chiropractic manipulation therapy for lumbar back pain (4 sessions).",
     provider: "Dr. Steven Grant",
@@ -498,7 +490,7 @@ export const submittedClaims = [
     claimant: "David Wu",
     amount: "$3,415.00",
     date: "2025-04-25",
-    status: "Submitted",
+    status: "Awaiting Approval",
     description:
       "Emergency department evaluation and observation for acute chest pain.",
     provider: "Dr. Lisa Chen",
@@ -544,7 +536,7 @@ export const submittedClaims = [
     claimant: "Mohammed Al‑Farsi",
     amount: "$18,650.00",
     date: "2025-04-30",
-    status: "Submitted",
+    status: "Awaiting Approval",
     description:
       "Arthroscopic knee surgery with meniscal repair reimbursement.",
     provider: "Dr. Emily Watson",
@@ -567,7 +559,7 @@ export const submittedClaims = [
     claimant: "Julia Park",
     amount: "$640.00",
     date: "2025-04-27",
-    status: "Submitted",
+    status: "Awaiting Approval",
     description:
       "Chiropractic manipulation therapy for lumbar back pain (4 sessions).",
     provider: "Dr. Steven Grant",
@@ -589,7 +581,7 @@ export const submittedClaims = [
     claimant: "David Wu",
     amount: "$3,415.00",
     date: "2025-04-25",
-    status: "Submitted",
+    status: "Awaiting Approval",
     description:
       "Emergency department evaluation and observation for acute chest pain.",
     provider: "Dr. Lisa Chen",
@@ -635,7 +627,7 @@ export const submittedClaims = [
     claimant: "Miguel Santos",
     amount: "$950.00",
     date: "2025-04-23",
-    status: "Submitted",
+    status: "Awaiting Approval",
     description: "Upper GI endoscopy with biopsy for chronic GERD.",
     provider: "Dr. Karen O'Neil",
     providerNPI: "2233005599",
@@ -657,7 +649,7 @@ export const submittedClaims = [
     claimant: "Chen Li",
     amount: "$14,750.00",
     date: "2025-04-22",
-    status: "Submitted",
+    status: "Awaiting Approval",
     description: "Percutaneous coronary intervention (single stent).",
     provider: "Dr. Jacob Atherton",
     providerNPI: "9988551133",
@@ -700,7 +692,7 @@ export const submittedClaims = [
     claimant: "Omar Haddad",
     amount: "$1,540.00",
     date: "2025-04-20",
-    status: "Submitted",
+    status: "Awaiting Approval",
     description: "MRI of lumbar spine without contrast.",
     provider: "Dr. Angela Brooks",
     providerNPI: "3344559988",
@@ -722,7 +714,7 @@ export const submittedClaims = [
     claimant: "Helena Rossi",
     amount: "$12,890.00",
     date: "2025-04-19",
-    status: "Submitted",
+    status: "Awaiting Approval",
     description: "Cesarean delivery with 3‑day postpartum inpatient stay.",
     provider: "Dr. Maria Hernandez",
     providerNPI: "6655443322",
@@ -765,7 +757,7 @@ export const submittedClaims = [
     claimant: "Theo Laurent",
     amount: "$1,020.00",
     date: "2025-04-17",
-    status: "Submitted",
+    status: "Awaiting Approval",
     description:
       "Outpatient physical therapy following rotator cuff repair (6 visits).",
     provider: "Dr. Chloe Bernard",
@@ -809,7 +801,7 @@ export const submittedClaims = [
     claimant: "Yuna Kim",
     amount: "$4,200.00",
     date: "2025-04-15",
-    status: "Submitted",
+    status: "Awaiting Approval",
     description:
       "Partial hospitalization program (PHP) for generalized anxiety disorder.",
     provider: "Dr. Robert Harris",
@@ -831,7 +823,7 @@ export const submittedClaims = [
     claimant: "Ahmed Darwish",
     amount: "$520.00",
     date: "2025-04-14",
-    status: "Submitted",
+    status: "Awaiting Approval",
     description: "Speech therapy for post‑stroke aphasia (4 sessions).",
     provider: "Dr. Hannah Cole",
     providerNPI: "8844332211",

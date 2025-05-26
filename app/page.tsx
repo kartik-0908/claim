@@ -41,7 +41,7 @@ import {
 export default function Home() {
   const analytics = {
     pending: 18,
-    denied: 12,
+    denied: 4,
     approvedAmount: 127450,
   };
 
@@ -648,7 +648,7 @@ export default function Home() {
                 </span>
                 <div>
                   <CardTitle className="text-lg font-semibold">
-                    Pending Reviews
+                    Awaiting Approval
                   </CardTitle>
                   <div className="text-xs text-muted-foreground">
                     Awaiting approval
