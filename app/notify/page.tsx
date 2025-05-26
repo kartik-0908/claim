@@ -1,9 +1,33 @@
 'use client'
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 
-// Mock notification data
-const notificationsData = [
+// Type definitions
+type NotificationType = "claim_denial" | "payment_discrepancy" | "prior_authorization" | "policy_update" | "payment_received";
+type Priority = "high" | "medium" | "low";
+type FilterType = "all" | NotificationType;
+
+interface Notification {
+  id: number;
+  type: NotificationType;
+  title: string;
+  message: string;
+  payor: string;
+  timestamp: string;
+  isRead: boolean;
+  priority: Priority;
+  // Optional fields that may not be present on all notifications
+  claimId?: string;
+  amount?: string;
+  expectedAmount?: string;
+  authorizationId?: string;
+  patientName?: string;
+  effectiveDate?: string;
+  claimsCount?: number;
+}
+
+
+const notificationsData: Notification[] = [
   {
     id: 1,
     type: "claim_denial",
@@ -78,13 +102,13 @@ const notificationsData = [
   }
 ];
 
-export default function NotificationsPage() {
-  const [notifications, setNotifications] = useState(notificationsData);
-  const [selectedNotification, setSelectedNotification] = useState(null);
-  const [filterType, setFilterType] = useState("all");
-  const [showUnreadOnly, setShowUnreadOnly] = useState(false);
+export default function NotificationsPage(): React.JSX.Element {
+  const [notifications, setNotifications] = useState<Notification[]>(notificationsData);
+  const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
+  const [filterType, setFilterType] = useState<FilterType>("all");
+  const [showUnreadOnly, setShowUnreadOnly] = useState<boolean>(false);
 
-  const getNotificationIcon = (type) => {
+  const getNotificationIcon = (type: NotificationType): string => {
     switch (type) {
       case "claim_denial":
         return "❌";
@@ -101,22 +125,22 @@ export default function NotificationsPage() {
     }
   };
 
-  const getNotificationColor = (type, priority) => {
+  const getNotificationColor = (type: NotificationType, priority: Priority): string => {
     if (priority === "high") return "border-l-red-500 bg-red-50";
     if (priority === "medium") return "border-l-yellow-500 bg-yellow-50";
     return "border-l-blue-500 bg-blue-50";
   };
 
-  const getPriorityBadge = (priority) => {
-    const colors = {
+  const getPriorityBadge = (priority: Priority): string => {
+    const colors: Record<Priority, string> = {
       high: "bg-red-100 text-red-800",
       medium: "bg-yellow-100 text-yellow-800",
       low: "bg-green-100 text-green-800"
     };
-    return colors[priority] || colors.low;
+    return colors[priority];
   };
 
-  const markAsRead = (id) => {
+  const markAsRead = (id: number): void => {
     setNotifications(prev =>
       prev.map(notif =>
         notif.id === id ? { ...notif, isRead: true } : notif
@@ -124,28 +148,41 @@ export default function NotificationsPage() {
     );
   };
 
-  const markAllAsRead = () => {
+  const markAllAsRead = (): void => {
     setNotifications(prev =>
       prev.map(notif => ({ ...notif, isRead: true }))
     );
   };
 
-  const filteredNotifications = notifications.filter(notif => {
+  const filteredNotifications: Notification[] = notifications.filter(notif => {
     if (filterType !== "all" && notif.type !== filterType) return false;
     if (showUnreadOnly && notif.isRead) return false;
     return true;
   });
 
-  const unreadCount = notifications.filter(notif => !notif.isRead).length;
+  const unreadCount: number = notifications.filter(notif => !notif.isRead).length;
 
-  const formatTimestamp = (timestamp) => {
+  const formatTimestamp = (timestamp: string): string => {
     const date = new Date(timestamp);
     const now = new Date();
-    const diffInHours = (now - date) / (1000 * 60 * 60);
+    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
     
     if (diffInHours < 1) return "Just now";
     if (diffInHours < 24) return `${Math.floor(diffInHours)}h ago`;
     return date.toLocaleDateString();
+  };
+
+  const handleNotificationClick = (notification: Notification): void => {
+    setSelectedNotification(notification);
+    markAsRead(notification.id);
+  };
+
+  const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+    setFilterType(event.target.value as FilterType);
+  };
+
+  const handleUnreadOnlyChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setShowUnreadOnly(event.target.checked);
   };
 
   return (
@@ -162,7 +199,7 @@ export default function NotificationsPage() {
             {unreadCount} Unread
           </span>
           <button
-          type="button"
+            type="button"
             onClick={markAllAsRead}
             className="text-blue-600 hover:text-blue-800 text-sm font-medium"
           >
@@ -178,10 +215,10 @@ export default function NotificationsPage() {
           <div className="bg-white rounded-lg border p-4">
             <div className="flex flex-wrap gap-4 items-center">
               <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-gray-700">Filter:</label>
+                <label htmlFor="filter-input" className="text-sm font-medium text-gray-700">Filter:</label>
                 <select
                   value={filterType}
-                  onChange={(e) => setFilterType(e.target.value)}
+                  onChange={handleFilterChange}
                   className="border rounded px-3 py-1 text-sm"
                 >
                   <option value="all">All Types</option>
@@ -196,7 +233,7 @@ export default function NotificationsPage() {
                 <input
                   type="checkbox"
                   checked={showUnreadOnly}
-                  onChange={(e) => setShowUnreadOnly(e.target.checked)}
+                  onChange={handleUnreadOnlyChange}
                   className="rounded"
                 />
                 Show unread only
@@ -214,10 +251,7 @@ export default function NotificationsPage() {
                 className={`bg-white rounded-lg border-l-4 shadow-sm hover:shadow-md transition-all cursor-pointer ${
                   getNotificationColor(notification.type, notification.priority)
                 } ${!notification.isRead ? 'font-medium' : 'opacity-75'}`}
-                onClick={() => {
-                  setSelectedNotification(notification);
-                  markAsRead(notification.id);
-                }}
+                onClick={() => handleNotificationClick(notification)}
               >
                 <div className="p-4">
                   <div className="flex items-start justify-between">
@@ -231,7 +265,7 @@ export default function NotificationsPage() {
                             {notification.title}
                           </h3>
                           {!notification.isRead && (
-                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <div className="w-2 h-2 bg-blue-500 rounded-full" />
                           )}
                         </div>
                         <p className="text-gray-600 text-sm mb-2">
@@ -319,10 +353,16 @@ export default function NotificationsPage() {
                 )}
 
                 <div className="flex gap-2 pt-4">
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium">
+                  <button 
+                    type="button"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium"
+                  >
                     Take Action
                   </button>
-                  <button className="border border-gray-300 hover:bg-gray-50 px-4 py-2 rounded text-sm font-medium">
+                  <button 
+                    type="button"
+                    className="border border-gray-300 hover:bg-gray-50 px-4 py-2 rounded text-sm font-medium"
+                  >
                     View Details
                   </button>
                 </div>
