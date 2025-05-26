@@ -54,15 +54,21 @@ function ClaimsTable({
 }) {
   const getStatusColor = (status: string) => {
     const statusLower = status.toLowerCase();
-    if (statusLower.includes('approved') || statusLower.includes('accept')) {
+    if (statusLower.includes("approved") || statusLower.includes("accept")) {
       return "bg-green-100 text-green-800";
-    } else if (statusLower.includes('denied') || statusLower.includes('reject')) {
+    } else if (
+      statusLower.includes("denied") ||
+      statusLower.includes("reject")
+    ) {
       return "bg-red-100 text-red-800";
-    } else if (statusLower.includes('pending') || statusLower.includes('review')) {
+    } else if (
+      statusLower.includes("pending") ||
+      statusLower.includes("review")
+    ) {
       return "bg-yellow-100 text-yellow-800";
-    } else {
-      return "bg-gray-100 text-gray-800";
     }
+
+    return "bg-gray-100 text-gray-800";
   };
 
   return (
@@ -91,7 +97,11 @@ function ClaimsTable({
                 {claim.denialReason}
               </TableCell>
               <TableCell>
-                <span className={`px-2 py-1 rounded text-xs font-semibold ${getStatusColor(claim.status)}`}>
+                <span
+                  className={`px-2 py-1 rounded text-xs font-semibold ${getStatusColor(
+                    claim.status
+                  )}`}
+                >
                   {claim.status}
                 </span>
               </TableCell>
@@ -123,13 +133,13 @@ function ReAppealDialog({
 
   const handleGenerateAppeal = async () => {
     setIsGenerating(true);
-    
+
     // Show loading state for 3 seconds
     setTimeout(() => {
       setIsGenerating(false);
       // Open the PDF from public folder
-      const pdfUrl = '/claimappeal.pdf'; // Update with your actual PDF filename
-      window.open(pdfUrl, '_blank');
+      const pdfUrl = "/claimappeal.pdf"; // Update with your actual PDF filename
+      window.open(pdfUrl, "_blank");
     }, 3000);
   };
 
@@ -244,8 +254,8 @@ function ReAppealDialog({
             </div>
             {/* Appeal Action */}
             <div className="flex gap-4">
-              <Button 
-                variant="default" 
+              <Button
+                variant="default"
                 onClick={handleGenerateAppeal}
                 disabled={isGenerating}
                 className="relative"

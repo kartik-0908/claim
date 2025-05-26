@@ -179,7 +179,7 @@ function ReviewDialog({
 
   return (
     <Dialog open={!!claim} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-4xl w-full">
+      <DialogContent className="sm:max-w-4xl w-full ">
         <DialogHeader>
           <DialogTitle className="text-2xl">Claim Details</DialogTitle>
         </DialogHeader>

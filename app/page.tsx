@@ -180,7 +180,7 @@ export default function Home() {
 
   const handleShowRecommendations = () => {
   // Option 1: Direct URL to PDF file
-  const pdfUrl = '/claimrecommendation.pdf'; // Update with your actual PDF path
+  const pdfUrl = '/recommendation.png'; // Update with your actual PDF path
   window.open(pdfUrl, '_blank');
 };
 
@@ -296,7 +296,7 @@ export default function Home() {
 
           {/* Dialog for Create New Claim */}
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogContent className="sm:max-w-4xl max-h-[95vh]">
+            <DialogContent className="sm:max-w-5xl h-[95vh]">
               <DialogHeader>
                 <DialogTitle>
                   {step === 1
